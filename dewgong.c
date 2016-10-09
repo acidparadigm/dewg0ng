@@ -86,6 +86,9 @@ void parse_full_mask (request* req)
 {
         char* excl = strchr(req->mask, '!');
         char* at = strchr(req->mask, '@');
+	req->nick = 0;
+	req->ident = 0;
+	req->host = 0;
 
         if (at && at < excl)
                 excl = 0;
@@ -137,10 +140,10 @@ int main (void)
     const char port[] = "6667";
 
     //this wasn't defined
-    char *user = "DEFINE_THIS";
+    char *user;
 
     //this wasn't defined either
-    char *message = "DEFINE_THIS";
+    char *message;
 
     #ifdef _WIN32   //windows host
         #define SOCK_WIN32 1
