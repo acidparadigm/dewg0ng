@@ -200,8 +200,9 @@ int main (void)
                  * like "PING"
                  */
                 if (!strcmp(req->command, "PING")) {
-                        sbuf[1] = 'O';
-                        raw(sbuf);
+ /*                       sbuf[1] = 'O';
+                        raw(sbuf);*/
+                        raw("PONG :%s\r\n", req->argv[0]);
                 } else if (!strcmp(req->command, "001") && channel != NULL) {
                         raw("JOIN %s\r\n", channel);
                         raw("PRIVMSG %s :\00304 DEWGONG GONG GONG\00300!\r\n", channel);
