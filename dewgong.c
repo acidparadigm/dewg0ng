@@ -131,10 +131,10 @@ void ascii (const char *fileName, const char *channel)
 int main (void)
 {
 
-    char *nick = "Dewgong";
-    char *channel = "#dev";
-    char *host = "irc.supernets.org";
-    char *port = "6667";
+    const char nick[] = "Dewgong";
+    const char channel[] = "#dev";
+    const char host[] = "irc.supernets.org";
+    const char port[] = "6667";
 
     //this wasn't defined
     char *user = "DEFINE_THIS";
@@ -199,9 +199,8 @@ int main (void)
                  * strcmp is safe when comparing a variable with a constant string
                  * like "PING"
                  */
+		fputs(sbuf, stdout);
                 if (!strcmp(req->command, "PING")) {
- /*                       sbuf[1] = 'O';
-                        raw(sbuf);*/
                         raw("PONG :%s\r\n", req->argv[0]);
                 } else if (!strcmp(req->command, "001") && channel != NULL) {
                         raw("JOIN %s\r\n", channel);
