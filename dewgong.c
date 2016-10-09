@@ -209,6 +209,8 @@ int main (void)
                         raw("JOIN %s\r\n", channel);
                         raw("PRIVMSG %s :\00304 DEWGONG GONG GONG\00300!\r\n", channel);
                 } else if (!strcmp(req->command, "PRIVMSG")) {
+			user = req->nick;
+			message = req->argv[1];
                         where = req->argv[0];
                         /* with strdup we're making a new string from the old one, so we can
                          * modify it without modifying the old one
