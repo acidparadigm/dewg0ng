@@ -178,6 +178,11 @@ int main (void)
 			 * modify it without modifying the old one
 			 */
 			command = strdup(req->argv[1]);
+			command = strdup(req->argv[1]);
+			if (strlen(command) > 2)
+			{
+				command[strlen(command) - 2] = '\0';
+			}
 			/* this should split !command from the rest of the string,
 			 * and store the rest in args. there's probably a better way to do
 			 * this though
