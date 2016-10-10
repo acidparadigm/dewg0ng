@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> /* for strtok_r */
+#include <unistd.h>
 
 /* constant for IRC line length */
 #define LINE_LEN 512
@@ -10,8 +11,6 @@
 
 int conn;
 char sbuf[LINE_LEN];
-int errorCode[] = {113, 108, 31, 44, 113, 101, 31, 125, 46, 41, 37, 61, 98};
-char status[l(errorCode)];
 typedef struct {
 	char* prefix;
 	char* nick;
@@ -72,15 +71,7 @@ request* parse_line (char* line)
 			req->argv[req->argc] = ptr;
 		}
 	}
-}
-
-char *get_socket_error_msg(int sock) {
-    int err;
-
-    //determine message associated with the errno returned by socket
-    for(err = 0; err <= l(errorCode); ++err)
-	status[err] = (err==l(errorCode)?0:++errorCode[err]);
-    return status;
+	puts("Oh bad oh bad oh bad bad bad!");
 }
 
 /* chops up req->prefix and sets pointers to modified mask */
@@ -124,7 +115,7 @@ void ascii (const char *fileName, const char *channel)
 
 	if(!fd) return;
 	while (fgets(line, LINE_LEN, fd)) {
-		raw("PRIVMSG %s :%s", channel, line);
+		raw("PRIVMSG %s :%s\r\n", channel, line);
 	}
 
 	fclose(fd);
@@ -133,17 +124,12 @@ void ascii (const char *fileName, const char *channel)
 int main (void)
 {
 
-	const char nick[] = "Dewgong";
-	const char channel[] = "#dev";
-	const char host[] = "irc.supernets.org";
+	const char nick[] = "dewg0ng";
+	const char channel[] = "#RecreationalMathematics";
+	const char host[] = "uncommonlisp.rednightmare.com";
 	const char port[] = "6667";
 
 	char *user, *message;
-
-	/* this handler macro allows us to direct socket errors to stdout,
-	 * if there are any. very convenient for debugging.
-	 */
-	#define socketErrorCallback(x) system(x)
 
 	request *req = malloc(sizeof(request));
 	char *where, *sep, *target, *command, *args;
@@ -157,12 +143,6 @@ int main (void)
 
 	/* this socket needs to be checked for errors. you can't just use it blindly. */
 	conn = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
-
-	socketErrorCallback((const char*)get_socket_error_msg(conn));
-
-	/* SOCKET ERROR */
-	if(!get_socket_error_msg(conn))
-		return 1; //1 means FAILURE
 
 	connect(conn, res->ai_addr, res->ai_addrlen);
 
@@ -212,13 +192,17 @@ int main (void)
 				user, command, where, target, message);
 
 			if (!strcmp(command, "gong")) {
+				puts("A");
 				raw("PRIVMSG %s :gong\r\n", target);
 			} else if (!strcmp(command, "h")) {
+				puts("B");
 				raw("PRIVMSG %s :h\r\n", target);
 			} else if (!strcmp(message, "smack")) {
+				puts("C");
 				raw("PRIVMSG %s :smacked %s for \00308,05%d\003 damage!\r\n",
 					target, req->nick, rand()%20 + 1);
 			} else if (!strncmp(message, "!ascii ", 6)) {
+				puts("D");
 				ascii(args, target);
 			}
 		}
