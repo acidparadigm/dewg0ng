@@ -39,7 +39,7 @@ request* parse_line (char* line)
 	/* calloc will set everything to 0, making things safer
 	 * and allowing you to test if req->nick is NULL for example
 	 */
-	request* req = calloc(1, sizeof(req));
+	request* req = calloc(1, sizeof(request)); sizeof(req);
 
 	char* ptr;
 	char* save;
