@@ -111,11 +111,12 @@ void ascii (const char *fileName, const char *channel)
 
 	char line[LINE_LEN];
 
+	printf("trying to open %s...\n", fileName);
 	fd = fopen(fileName, "r");
 
 	if(!fd) return;
 	while (fgets(line, LINE_LEN, fd)) {
-		raw("PRIVMSG %s :%s\r\n", channel, line);
+		raw("PRIVMSG %s :%s", channel, line);
 	}
 
 	fclose(fd);
@@ -124,7 +125,7 @@ void ascii (const char *fileName, const char *channel)
 int main (void)
 {
 
-	const char nick[] = "dewg0ng";
+	const char nick[] = "butts";
 	const char channel[] = "#RecreationalMathematics";
 	const char host[] = "uncommonlisp.rednightmare.com";
 	const char port[] = "6667";
