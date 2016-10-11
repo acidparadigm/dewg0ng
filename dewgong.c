@@ -7,7 +7,7 @@
 #include <unistd.h>
 
 /* constant for IRC line length */
-#define LINE_LEN 512
+#define LINE_LEN 510
 #define l(x) sizeof(x)/sizeof(int)
 #define LOCALE "en_US.UTF-8"
 
@@ -73,6 +73,7 @@ request* parse_line (char* line)
 			req->argv[req->argc] = ptr;
 		}
 	}
+	return req;
 	puts("Oh bad oh bad oh bad bad bad!");
 }
 
@@ -117,10 +118,20 @@ void ascii (const char *fileName, const char *channel)
 
 	if(!fd) return;
 	while (fgets(line, LINE_LEN, fd)) {
-		raw("PRIVMSG %s :%s\r\n", channel, line);
+		raw("PRIVMSG %s :%s", channel, line);
 	}
 
 	fclose(fd);
+}
+
+void join (const char *chan)
+{
+	raw("JOIN %s\r\n", chan);
+}
+
+void part (const char* chan)
+{
+	raw("PART %s\r\n", chan);
 }
 
 int main (void)
@@ -207,11 +218,16 @@ int main (void)
 				raw("PRIVMSG %s :h\r\n", target);
 			} else if (!strcmp(message, "smack")) {
 				puts("C");
-				raw("PRIVMSG %s :smacked %s for \00308,05%d\003 damage!\r\n",
-					target, req->nick, rand()%20 + 1);
+				raw("PRIVMSG %s :smacked %s for \00308,05%d\003 damage!\r\n", target, req->nick, rand()%20 + 1);
 			} else if (!strncmp(message, "!ascii ", 6)) {
 				puts("D");
 				ascii(args, target);
+			} else if (!strncmp(message, "!join ", 6)) {
+				puts("E");
+				join(args);
+			} else if (!strncmp(message, "!part ", 6)) {
+				puts("F");
+				part(args);
 			}
 		}
 	}
