@@ -1,3 +1,4 @@
+#include <locale.h>
 #include <netdb.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -8,6 +9,7 @@
 /* constant for IRC line length */
 #define LINE_LEN 512
 #define l(x) sizeof(x)/sizeof(int)
+#define LOCALE "en_US.UTF-8"
 
 int conn;
 char sbuf[LINE_LEN];
@@ -111,12 +113,11 @@ void ascii (const char *fileName, const char *channel)
 
 	char line[LINE_LEN];
 
-	printf("trying to open %s...\n", fileName);
 	fd = fopen(fileName, "r");
 
 	if(!fd) return;
 	while (fgets(line, LINE_LEN, fd)) {
-		raw("PRIVMSG %s :%s", channel, line);
+		raw("PRIVMSG %s :%s\r\n", channel, line);
 	}
 
 	fclose(fd);
@@ -125,9 +126,11 @@ void ascii (const char *fileName, const char *channel)
 int main (void)
 {
 
-	const char nick[] = "butts";
-	const char channel[] = "#RecreationalMathematics";
-	const char host[] = "uncommonlisp.rednightmare.com";
+	char *locale;
+	setlocale(LC_ALL, LOCALE);
+	const char nick[] = "dewg0ng";
+	const char channel[] = "#dev";
+	const char host[] = "irc.supernets.org";
 	const char port[] = "6667";
 
 	char *user, *message;
